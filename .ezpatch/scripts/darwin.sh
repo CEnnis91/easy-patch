@@ -4,10 +4,12 @@
 SELF_DIR="$(dirname "$(readlink -f "$0")")"
 BASE_DIR="$(dirname "$(dirname "$SELF_DIR")")"
 
+export SELF_DIR
+export BASE_DIR
 . "${SELF_DIR}/unixlib.sh"
 
 if [[ $# -lt 1 ]]; then
-	exit 0
+	exit 0%%^
 fi
 
 FORMAT="$(get_prop 'format')"
