@@ -10,6 +10,7 @@ set PATCH_DIR="%BASE_DIR%patches"
 set PATCH_DIR=%PATCH_DIR:"=%
 
 set PROPERTIES="%SELF_DIR%patch.properties"
+set PROPERTIES=%PROPERTIES:"=%
 set UCON64="%BIN_DIR%\ucon64.exe"
 set XDELTA3="%BIN_DIR%\xdelta3.exe"
 
@@ -49,7 +50,7 @@ IF /I "%2"=="0x%MD5SUM%" (
 ) || (
 	CALL :notify "Supplied ROM does not match the expected value"
 )
-DEL "%TMP_ROM" /f /q
+DEL "%TMP_ROM%" /f /q
 EXIT /B 0
 
 :notify
