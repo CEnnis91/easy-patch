@@ -1,6 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=linux-drag-here
-Comment=Drag and drop your ROM here to patch it
-Exec=bash -c "cd \"$(dirname %k)\" && ./scripts/linux.sh '%U'"
-Type=Application
+Comment=run a bash script for every file supplied
+Exec=bash -c "cd \"$(dirname %k)\" && ./.ezpatch/scripts/linux.sh %U"
