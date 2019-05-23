@@ -22,7 +22,7 @@ for file in "$@"; do
 	cp "$file" "$TMP_ROM"
 	$UCON64 "--${FORMAT}" "$TMP_ROM"
 
-	input_md5sum="$(md5sum $TMP_ROM | awk '{print $1}')"
+	input_md5sum="$(md5sum "$TMP_ROM" | awk '{print $1}')"
 	if [[ "$input_md5sum" == "$MD5SUM" ]]; then
 		for patch in $PATCH_DIR/*; do
 			patch_name="$(basename "$patch")"

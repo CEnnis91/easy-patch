@@ -1,7 +1,7 @@
 #!/bin/bash
 # darwin.sh
 
-SELF_DIR="$(dirname "$(readlink -f "$0")")"
+SELF_DIR="$(cd "$(dirname "$0")"; pwd -P)"
 BASE_DIR="$(dirname "$(dirname "$SELF_DIR")")"
 
 export SELF_DIR
@@ -9,7 +9,7 @@ export BASE_DIR
 . "${SELF_DIR}/unixlib.sh"
 
 if [[ $# -lt 1 ]]; then
-	exit 0%%^
+	exit 0
 fi
 
 FORMAT="$(get_prop 'format')"
@@ -22,7 +22,7 @@ for file in "$@"; do
 	cp "$file" "$TMP_ROM"
 	$UCON64 "--${FORMAT}" "$TMP_ROM"
 
-	input_md5sum="$(md5sum $TMP_ROM | awk '{print $1}')"
+	input_md5sum="$(md5 "$TMP_ROM" | awk '{print $NF}')"
 	if [[ "$input_md5sum" == "$MD5SUM" ]]; then
 		for patch in $PATCH_DIR/*; do
 			patch_name="$(basename "$patch")"

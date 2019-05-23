@@ -24,7 +24,7 @@ notify() {
 }
 
 notifyDarwin() {
-    osascript -e "display dialog with title \"${NOTIF_NAME}\" \"${1}\" buttons {\"OK\"}"
+    osascript -e "display dialog \"${1}\" WITH TITLE \"${NOTIF_NAME}\" buttons {\"OK\"}"
 }
 
 notifyLinux() {
