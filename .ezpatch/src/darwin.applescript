@@ -3,7 +3,12 @@
 
 on open filelist
 	tell application "Finder"
-		set dirnameFinder to get (container of (path to me)) as text
+		if exists Finder window 1 then
+			set dirnameFinder to target of Finder window 1 as text
+		else
+			set dirnameFinder to desktop as text
+		end if
+
 		set dirname to (the POSIX path of dirnameFinder)
 		set script_path to dirname & ".ezpatch/scripts/darwin.sh"
 	end tell
