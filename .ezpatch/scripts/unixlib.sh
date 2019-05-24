@@ -15,18 +15,18 @@ get_prop() {
 	grep "^${1}=" "$PROPERTIES" | cut -d'=' -f2
 }
 
-notify() {
+md5sum_file() {
     if [[ "$(uname)" == "Darwin" ]]; then
-        notifyDarwin "$1"
+        md5 "$1" | awk '{print $NF}'
     else
-        notifyLinux "$1"
+        md5sum "$1" | awk '{print $1}'
     fi
 }
 
-notifyDarwin() {
-    osascript -e "display dialog \"${1}\" WITH TITLE \"${NOTIF_NAME}\" buttons {\"OK\"}"
-}
-
-notifyLinux() {
-	notify-send --app-name="${NOTIF_NAME}" "${1}"
+notify() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        osascript -e "display dialog \"${1}\" with title \"${NOTIF_NAME}\" buttons {\"OK\"}"
+    else
+        notify-send -u critical "${NOTIF_NAME}" "${1}"
+    fi
 }

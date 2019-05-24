@@ -1,13 +1,40 @@
 #!/bin/bash
-# linux.sh
+# unix.sh
 
-SELF_DIR="$(dirname "$(readlink -f "$0")")"
-export SELF_DIR
+get_prop() {
+	grep "^${1}=" "$PROPERTIES" | cut -d'=' -f2
+}
+
+md5sum_file() {
+    if [[ "$(uname)" == "darwin" ]]; then
+        md5 "$1" | awk '{print $NF}'
+    else
+        md5sum "$1" | awk '{print $1}'
+    fi
+}
+
+notify() {
+    if [[ "$(uname)" == "darwin" ]]; then
+        osascript -e "display dialog \"${1}\" with title \"${NOTIF_NAME}\" buttons {\"OK\"}"
+    else
+        notify-send -u critical "${NOTIF_NAME}" "${1}"
+    fi
+}
+
+UNAME="$(uname | awk '{print tolower($0)}')"
+if [[ "$UNAME" == "darwin" ]]; then
+    SELF_DIR="$(cd "$(dirname "$0")"; pwd -P)"
+else
+    SELF_DIR="$(dirname "$(readlink -f "$0")")"
+fi
 
 BASE_DIR="$(dirname "$(dirname "$SELF_DIR")")"
-export BASE_DIR
-
-. "${SELF_DIR}/unixlib.sh"
+BIN_DIR="${BASE_DIR}/.ezpatch/bin/${UNAME}"
+NOTIF_NAME="Easy Patch"
+PATCH_DIR="${BASE_DIR}/patches"
+PROPERTIES="${SELF_DIR}/patch.properties"
+UCON64="${BIN_DIR}/ucon64"
+XDELTA3="${BIN_DIR}/xdelta3"
 
 if [[ $# -lt 1 ]]; then
 	notify "Drag your ROM onto this program"

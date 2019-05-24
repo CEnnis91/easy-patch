@@ -2,13 +2,15 @@
 # darwin.sh
 
 SELF_DIR="$(cd "$(dirname "$0")"; pwd -P)"
-BASE_DIR="$(dirname "$(dirname "$SELF_DIR")")"
-
 export SELF_DIR
+
+BASE_DIR="$(dirname "$(dirname "$SELF_DIR")")"
 export BASE_DIR
+
 . "${SELF_DIR}/unixlib.sh"
 
 if [[ $# -lt 1 ]]; then
+	notify "Drag your ROM onto this program"
 	exit 0
 fi
 
@@ -22,7 +24,7 @@ for file in "$@"; do
 	cp "$file" "$TMP_ROM"
 	$UCON64 "--${FORMAT}" "$TMP_ROM"
 
-	input_md5sum="$(md5 "$TMP_ROM" | awk '{print $NF}')"
+	input_md5sum="$(md5sum_file "$TMP_ROM")"
 	if [[ "$input_md5sum" == "$MD5SUM" ]]; then
 		for patch in $PATCH_DIR/*; do
 			patch_name="$(basename "$patch")"

@@ -1,6 +1,8 @@
 -- darwin.applescript
 -- run a bash script for every file supplied
 
+display dialog "Drag your ROM onto this program" with title "Easy Patch" buttons {"OK"}
+
 on open filelist
 	tell application "Finder"
 		if exists Finder window 1 then
