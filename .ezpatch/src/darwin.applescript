@@ -1,6 +1,8 @@
 -- darwin.applescript
 -- run a bash script for every file supplied
 
+display dialog "Drag the appropriate ROM onto this program to patch it" with title "Easy Patch" buttons {"OK"}
+
 on open filelist
 	tell application "Finder"
 		if exists Finder window 1 then
@@ -10,7 +12,7 @@ on open filelist
 		end if
 
 		set dirname to (the POSIX path of dirnameFinder)
-		set script_path to dirname & ".ezpatch/scripts/darwin.sh"
+		set script_path to dirname & ".ezpatch/scripts/unix.sh"
 	end tell
 
 	repeat with x in filelist

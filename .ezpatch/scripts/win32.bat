@@ -48,7 +48,7 @@ IF /I "%2"=="0x%MD5SUM%" (
 		)
 	)
 ) || (
-	CALL :notify "Supplied ROM does not match the expected value"
+	CALL :notify "Your ROM does not match the developer's original ROM"
 )
 DEL "%TMP_ROM%" /f /q
 EXIT /B 0

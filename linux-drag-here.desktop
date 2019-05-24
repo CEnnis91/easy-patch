@@ -2,4 +2,4 @@
 Type=Application
 Name=linux-drag-here
 Comment=run a bash script for every file supplied
-Exec=bash -c "cd \"$(dirname %k)\" && ./.ezpatch/scripts/linux.sh %U"
+Exec=bash -c "cd \"$(dirname %k)\" && ./.ezpatch/scripts/unix.sh %U"
