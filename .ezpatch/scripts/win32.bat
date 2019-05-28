@@ -12,10 +12,8 @@ set PROPERTIES="%SELF_DIR:"=%patch.properties"
 set UCON64="%BIN_DIR:"=%\ucon64.exe"
 set XDELTA3="%BIN_DIR:"=%\xdelta3.exe"
 
-:: <input file> <md5sum of input>
-:: <input file> is already quoted from win32.au3
-IF %1=="" EXIT 0
-IF "%2"=="" EXIT 0
+IF "%1"=="" EXIT 0
+CALL :md5sum "%1"
 
 FOR /F "tokens=1* delims==" %%A IN ('type %PROPERTIES%') DO (
 	IF "%%A"=="format" set FORMAT=%%B
@@ -30,7 +28,7 @@ COPY "%1" %TMP_ROM%
 
 :: by default AutoIt outputs 0xDEADBEEF, but properties has
 :: just deadbeef, account for this format difference
-IF /I "%2"=="0x%MD5SUM%" (
+IF /I "%HASHSUM%"=="%MD5SUM%" (
 	FOR %%X IN ("%PATCH_DIR:"=%\*") DO (
 		ECHO %%X | find ".gitignore" > nul
 
@@ -51,6 +49,11 @@ IF /I "%2"=="0x%MD5SUM%" (
 
 ::PAUSE
 DEL %TMP_ROM% /f /q
+EXIT /B 0
+
+:md5sum
+FOR /F "delims=" %%f in ('CertUtil -hashfile "%1" MD5 ^| find /i /v "md5" ^| find /i /v "certutil"') do set hashfile=%%f
+set HASHSUM=%hashfile: =%
 EXIT /B 0
 
 :notify
