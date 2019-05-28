@@ -12,8 +12,16 @@ set PROPERTIES="%SELF_DIR:"=%patch.properties"
 set UCON64="%BIN_DIR:"=%\ucon64.exe"
 set XDELTA3="%BIN_DIR:"=%\xdelta3.exe"
 
-IF "%1"=="" EXIT 0
-CALL :md5sum "%1"
+:: allow this script to be run directly
+IF "%ROM%"=="" (
+	IF "%1"=="" (
+		EXIT 0
+	) ELSE (
+		set ROM="%1"
+	)
+)
+
+CALL :md5sum "%ROM%"
 
 FOR /F "tokens=1* delims==" %%A IN ('type %PROPERTIES%') DO (
 	IF "%%A"=="format" set FORMAT=%%B
@@ -28,7 +36,7 @@ COPY "%1" %TMP_ROM%
 
 :: by default AutoIt outputs 0xDEADBEEF, but properties has
 :: just deadbeef, account for this format difference
-IF /I "%HASHSUM%"=="%MD5SUM%" (
+IF /I %HASHSUM%=="%MD5SUM%" (
 	FOR %%X IN ("%PATCH_DIR:"=%\*") DO (
 		ECHO %%X | find ".gitignore" > nul
 
@@ -47,13 +55,14 @@ IF /I "%HASHSUM%"=="%MD5SUM%" (
 	CALL :notify "Your ROM does not match the developer's original ROM"
 )
 
+:: useful to debugging
 ::PAUSE
 DEL %TMP_ROM% /f /q
 EXIT /B 0
 
 :md5sum
-FOR /F "delims=" %%f in ('CertUtil -hashfile "%1" MD5 ^| find /i /v "md5" ^| find /i /v "certutil"') do set hashfile=%%f
-set HASHSUM=%hashfile: =%
+FOR /F "delims=" %%f in ('CertUtil -hashfile %1 MD5 ^| find /i /v "md5" ^| find /i /v "certutil"') do set HASHSUM=%%f
+	set HASHSUM="%HASHSUM: =%"
 EXIT /B 0
 
 :notify
