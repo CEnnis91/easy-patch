@@ -15,5 +15,7 @@ EndIf
 For $x = 1 To $CmdLine[0]
    ; it is easier for autoit to grab the md5sum than let the batch file
    $md5sum = _Crypt_HashFile($CmdLine[$x], $CALG_MD5)
-   ShellExecuteWait($SCRIPT_PATH, $CmdLine[$x] & " " & $md5sum, "", "", @SW_HIDE)
+   $file = '"' & $CmdLine[$x] & '"'
+
+   ShellExecuteWait($SCRIPT_PATH, $file & ' ' & $md5sum, "", "")
 Next
