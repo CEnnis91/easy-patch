@@ -15,6 +15,7 @@ set XDELTA3="%BIN_DIR:"=%\xdelta3.exe"
 :: allow this script to be run directly
 IF "%ROM%"=="" (
 	IF "%1"=="" (
+	    CALL :notify "Drag the appropriate ROM onto this program to patch it"
 		EXIT 0
 	) ELSE (
 		set ROM="%1"

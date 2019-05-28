@@ -3,3 +3,4 @@
 
 set ROM="%1"
 CALL "%~dp0.ezpatch\scripts\win32.bat"
+EXIT /B 0
