@@ -63,14 +63,18 @@ TMP_ROM="${TMP_DIR}/input.rom"
 
 for file in "$@"; do
 	cp "$file" "$TMP_ROM"
-	$UCON64 "--${FORMAT}" "$TMP_ROM"
+	"$UCON64" "--${FORMAT}" "$TMP_ROM"
 
 	input_md5sum="$(md5sum_file "$TMP_ROM")"
 	if [[ "$input_md5sum" == "$MD5SUM" ]]; then
-		for patch in $PATCH_DIR/*; do
+		OLD_IFS="$IFS"
+		IFS=$'\n' patches=($(find "$PATCH_DIR" -type f -not -name ".*"))
+		IFS="$OLD_IFS"
+
+		for patch in "${patches[@]}"; do
 			patch_name="$(basename "$patch")"
 			output_rom="${BASE_DIR}/${OUTPUT_DIR}/${patch_name%.*}.${FORMAT}"
-			$XDELTA3 -d -f -s "$TMP_ROM" "$patch" "$output_rom"
+			"$XDELTA3" -d -f -s "$TMP_ROM" "$patch" "$output_rom"
 
 			if [[ $? -eq 0 ]]; then
 				notify "Successfully created $(basename "$output_rom") in $(dirname "$output_rom")"
