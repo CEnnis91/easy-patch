@@ -6,7 +6,7 @@ get_prop() {
 }
 
 md5sum_file() {
-    if [[ "$(uname)" == "darwin" ]]; then
+    if [[ "${UNAME}" == "darwin" ]]; then
         md5 "$1" | awk '{print $NF}'
     else
         md5sum "$1" | awk '{print $1}'
@@ -14,7 +14,7 @@ md5sum_file() {
 }
 
 notify() {
-    if [[ "$(uname)" == "darwin" ]]; then
+    if [[ "${UNAME}" == "darwin" ]]; then
         osascript -e "display dialog \"${1}\" with title \"${NOTIF_NAME}\" buttons {\"OK\"}"
     else
 		# technically, support even command line linux users,

@@ -16,6 +16,6 @@ on open filelist
 	end tell
 
 	repeat with x in filelist
-		do shell script script_path & " " & quoted form of POSIX path of x
+		do shell script quoted form of script_path & " " & quoted form of POSIX path of x
 	end repeat
 end open
