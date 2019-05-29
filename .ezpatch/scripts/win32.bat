@@ -69,7 +69,7 @@ IF %ERRORLEVEL% NEQ 0 (
 EXIT /B 0
 
 :patch
-%XDELTA3% -d -f -s %TMP_ROM% %1 "%BASE_DIR:"=%%OUTPUT_DIR%\%%~n1.%FORMAT%"
+%XDELTA3% -d -f -s %TMP_ROM% %1 "%BASE_DIR:"=%%OUTPUT_DIR%\%~n1.%FORMAT%"
 
 IF %ERRORLEVEL% EQU 0 (
 	CALL :notify "Successfully created %~n1.%FORMAT% in %BASE_DIR:"=%%OUTPUT_DIR%"
