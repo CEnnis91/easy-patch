@@ -58,13 +58,23 @@ fi
 FORMAT="$(get_prop 'format')"
 MD5SUM="$(get_prop 'md5sum')"
 OUTPUT_DIR="$(get_prop 'output')"
+OUTPUT_LOG="${OUTPUT_DIR}/output.log"
 TMP_DIR="$(mktemp -d)"
 TMP_ROM="${TMP_DIR}/input.rom"
 
-for file in "$@"; do
-	cp "$file" "$TMP_ROM"
-	"$UCON64" "--${FORMAT}" "$TMP_ROM"
+echo "=== EASY PATCH START - $(date +%s) ===" > "$OUTPUT_LOG"
+if [[ "$UNAME" == "darwin" ]]; then
+	system_profiler SPSoftwareDataType | tee -a "$OUTPUT_LOG"
+else
+	uname -a | tee -a "$OUTPUT_LOG"
+fi
 
+for file in "$@"; do
+	echo "Copying '${file}' to '${TMP_ROM}'" >> "$OUTPUT_LOG"
+	cp "$file" "$TMP_ROM"
+	"$UCON64" "--${FORMAT}" "$TMP_ROM" | tee -a "$OUTPUT_LOG"
+
+	echo "Checking md5sum of '${file}'" >> "$OUTPUT_LOG"
 	input_md5sum="$(md5sum_file "$TMP_ROM")"
 	if [[ "$input_md5sum" == "$MD5SUM" ]]; then
 		OLD_IFS="$IFS"
@@ -74,7 +84,8 @@ for file in "$@"; do
 		for patch in "${patches[@]}"; do
 			patch_name="$(basename "$patch")"
 			output_rom="${BASE_DIR}/${OUTPUT_DIR}/${patch_name%.*}.${FORMAT}"
-			"$XDELTA3" -d -f -s "$TMP_ROM" "$patch" "$output_rom"
+			echo "Trying to patch '${patch_name}' to '${output_rom}'" >> "$OUTPUT_LOG"
+			"$XDELTA3" -d -f -s "$TMP_ROM" "$patch" "$output_rom" | tee -a "$OUTPUT_LOG"
 
 			if [[ $? -eq 0 ]]; then
 				notify "Successfully created $(basename "$output_rom") in $(dirname "$output_rom")"
@@ -88,4 +99,5 @@ for file in "$@"; do
 done
 
 rm -rf "$TMP_DIR"
+echo "=== EASY PATCH END - $(date +%s) ===" >> "$OUTPUT_LOG"
 exit 0
