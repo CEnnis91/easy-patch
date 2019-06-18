@@ -16,6 +16,7 @@ md5sum_file() {
 notify() {
     if [[ "${UNAME}" == "darwin" ]]; then
         osascript -e "display dialog \"${1}\" with title \"${NOTIF_NAME}\" buttons {\"OK\"}"
+	echo "$1" >> "$OUTPUT_LOG"
     else
 		# technically, support even command line linux users,
 		# even though they probably do not need help patching :)
@@ -32,6 +33,8 @@ notify() {
 				echo "${NOTIF_NAME}: ${1}"
 			fi
 		fi
+
+		echo "$1" >> "$OUTPUT_LOG"
     fi
 }
 
@@ -68,6 +71,7 @@ if [[ "$UNAME" == "darwin" ]]; then
 else
 	uname -a | tee -a "$OUTPUT_LOG"
 fi
+echo "" >> "$OUTPUT_LOG"
 
 for file in "$@"; do
 	echo "Copying '${file}' to '${TMP_ROM}'" >> "$OUTPUT_LOG"
